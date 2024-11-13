@@ -1,0 +1,31 @@
+% This code solves d2y/dx2 - phi2y = 0
+clc;
+close all;
+x = linspace(0, 1, 10001);
+global phi;
+phi = 10;
+%% Solution Block
+solinit = bvpinit(x, [1, 1]);
+sol = bvp4c(@eqfun, @bcfun, solinit);
+y = deval(sol, x);
+%% Plotting of results
+plot(x, y(1, :), 'b');
+xlim([0, 1]);
+xlabel('distance');
+ylabel('concentration');
+ylim([0, 1]);
+hold on;
+yt = cosh(phi * (1 - x)) / cosh(phi);
+plot(x, yt, 'o');
+%% eqfun
+function dydx = eqfun(~, y)
+global phi;
+phi = 10;
+dydx = [y(2);
+phi ^ 2 * y(1)];
+end
+%% bcfun
+function res = bcfun(ya, yb)
+res = [ya(1) - 1;
+yb(2)];
+end
